@@ -1,0 +1,313 @@
+{
+    "Version": "1.00",
+    "Sections": [
+	{
+            "Name": "GeneralSettings",
+            "Description": "Related To General Mod Settings",
+            "IsAdvanced": false,
+            "Keys": [
+				{
+                    "Options": [
+                        "Bar + Text",
+                        "Text Only",
+						"Bar Only"
+                    ],
+                    "Value": 0,
+                    "Name": "DisplayType",
+                    "Description": "In What Form Progress Will Be Displayed",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.MultipleChoiceKey"
+                },
+				{
+                    "Value": false,
+                    "Name": "ShowGovAttributeText",
+                    "Description": "If Governing Attribute Text Should Be Displayed || Default = False",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                }
+            ],
+            "$version": "v1"
+        },
+		{
+            "Name": "TextSettings",
+            "Description": "Related To Text Settings And Options",
+            "IsAdvanced": false,
+            "Keys": [
+                {
+                    "Options": [
+                        "Current XP / Required XP",
+                        "Needed XP Remaining",
+						"Numbers Only (For Nerds)"
+                    ],
+                    "Value": 0,
+                    "Name": "TextDisplayType",
+                    "Description": "In What Form Progress Text Will Be Displayed",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.MultipleChoiceKey"
+                },
+				{
+                    "Options": [
+                        "None",
+                        "<>",
+						"[]",
+						"()",
+						"++",
+						"**",
+						"=="
+                    ],
+                    "Value": 0,
+                    "Name": "TextBrackets",
+                    "Description": "If Progress Text Should Be Surrounded By Brackets, And If So What Kind",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.MultipleChoiceKey"
+                },
+				{
+                    "Min": 0.3,
+                    "Max": 1.0,
+                    "Value": 0.7,
+                    "Name": "TextScale",
+                    "Description": "What Scale/Size Progress Text Will Be",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderFloatKey"
+                },
+				{
+                    "Value": {
+                        "r": 255,
+                        "g": 255,
+                        "b": 255,
+                        "a": 255
+                    },
+                    "Name": "TextColor",
+                    "Description": "Main Color Used For Progress Text",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ColorKey"
+                }
+            ],
+            "$version": "v1"
+        },
+		{
+            "Name": "ProgressBarSettings",
+            "Description": "Related To Progress Bar Graphic Settings And Options",
+            "IsAdvanced": false,
+            "Keys": [
+				{
+                    "Min": 0,
+                    "Max": 100,
+                    "Value": 60,
+                    "Name": "BarPositionX",
+                    "Description": "Changes X Position Of Progress Bars",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
+                },
+				{
+                    "Min": 0,
+                    "Max": 30,
+                    "Value": 10,
+                    "Name": "BarPositionY",
+                    "Description": "Changes Y Position Of Progress Bars",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
+                },
+				{
+                    "Min": 10,
+                    "Max": 50,
+                    "Value": 50,
+                    "Name": "ProgBarWidth",
+                    "Description": "Changes Width Of The Progress Bars",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
+                },
+				{
+                    "Value": {
+                        "r": 255,
+                        "g": 235,
+                        "b": 4,
+                        "a": 255
+                    },
+                    "Name": "ProgBarOutlineColor",
+                    "Description": "Main Color Used For The Outline Of The Progress Bar",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ColorKey"
+                },
+                {
+                    "Value": {
+                        "r": 140,
+                        "g": 0,
+                        "b": 0,
+                        "a": 255
+                    },
+                    "Name": "ProgBarColor",
+                    "Description": "Main Color Used For The Progress Bar",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ColorKey"
+                },
+				{
+                    "Value": {
+                        "r": 0,
+                        "g": 140,
+                        "b": 0,
+                        "a": 255
+                    },
+                    "Name": "ReadyToLevelColor",
+                    "Description": "Color Used For The Progress Bar When Skill Is Ready To Level",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ColorKey"
+                },
+				{
+                    "Value": {
+                        "r": 0,
+                        "g": 0,
+                        "b": 0,
+                        "a": 255
+                    },
+                    "Name": "MasteredColor",
+                    "Description": "Color Used For The Progress Bar When A Skill Reaches Level 100+",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ColorKey"
+                },
+				{
+                    "Value": {
+                        "r": 0,
+                        "g": 0,
+                        "b": 140,
+                        "a": 255
+                    },
+                    "Name": "MaxedColor",
+                    "Description": "Color Used For The Progress Bar When A Skill Has Reached Its Maximum Possible Value Due To Another Being Mastered Already",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ColorKey"
+                }
+            ],
+            "$version": "v1"
+        },
+		{
+            "Name": "NotificationSettings",
+            "Description": "Related To Skill Notification Options",
+            "IsAdvanced": false,
+            "Keys": [
+                {
+                    "Value": true,
+                    "Name": "SkillReadyNotif",
+                    "Description": "If A Notification Should Show When A Skill Is Ready To Increase || Default = True",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+				{
+                    "Min": 1,
+                    "Max": 120,
+                    "Value": 15,
+                    "Name": "NotifCheckFreq",
+                    "Description": "How Often In Approximate Seconds Skills Will Be Checked For Being Ready To Increase",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
+                },
+				{
+                    "Value": true,
+                    "Name": "AllowSoundNotif",
+                    "Description": "If A Sound Should Play When Notifications Are Enabled",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+				{
+                    "Options": [
+                        "1. Gold Jingle 1",
+						"2. Gold Jingle 2",
+						"3. Rolling Dice",
+						"4. Picked Lock",
+						"5. Page Turning",
+						"6. Writing Note",
+						"7. Casting Barrier",
+						"8. Equipping Jewelry",
+						"9. Equipping Staff",
+						"10. Glasses Clanging 1",
+						"11. Glasses Clanging 2",
+						"12. Chair Creaking",
+						"13. Angelic Sound",
+						"14. Metal Clank",
+						"15. Pulling Lever",
+						"16. Turning Wheel",
+						"17. Door Opening",
+						"18. Bell Tolling",
+						"19. Tumblers Jingle",
+						"20. Strike Flame",
+						"21. Thunder Clap 1",
+						"22. Thunder Clap 2",
+						"23. Water Splash",
+						"24. Water Drip",
+						"25. Bubbling Water",
+						"26. Drumming",
+						"27. Choose Your Race 1",
+						"28. Choose Your Race 2",
+						"29. Daggerfall Levelup",
+						"30. Arena Levelup 1",
+						"31. Arena Levelup 2",
+						"32. Horse Neigh",
+						"33. Dog Bark",
+						"34. Cat Meow",
+						"35. Pig Squeals",
+						"36. Cow Moo",
+						"37. Bear Greeting",
+						"38. Spider Purring",
+						"39. Wereboar Squeal",
+						"40. Dragon Cry 1",
+						"41. Dragon Cry 2",
+						"42. Daggerfall Groan",
+						"43. Arena Groan 1",
+						"44. Arena Groan 2",
+						"45. Banshee Scream",
+						"46. Doom Guy Hurt",
+						"47. Harpy Cry 1",
+						"48. Harpy Cry 2",
+						"49. Skeleton Scream 1",
+						"50. Skeleton Scream 2",
+						"51. Giant Groan 1",
+						"52. Giant Groan 2",
+						"53. Zombie Groan 1",
+						"54. Zombie Groan 2",
+						"55. Vampire Exhale",
+						"56. Vampire Ancient",
+						"57. Seducer Cackle",
+						"58. Daedra Lord Laugh",
+						"59. Vengeance!",
+						"60. Arena Halt 1",
+						"61. Arena Halt 2",
+						"62. Daggerfall Halt!"
+                    ],
+                    "Value": 0,
+                    "Name": "NotifSoundClip",
+                    "Description": "What Soundclip From The Daggerfall Library Should Play For This Notification",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.MultipleChoiceKey"
+                },
+				{
+                    "Min": 0.1,
+                    "Max": 1.5,
+                    "Value": 0.7,
+                    "Name": "ClipVolume",
+                    "Description": "Volume That Notification Sounds Will Play",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderFloatKey"
+                },
+				{
+                    "Value": true,
+                    "Name": "AllowTextNotif",
+                    "Description": "If A HUD Text Warning Should Be Displayed When Notifications Are Enabled",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+                },
+				{
+                    "Options": [
+                        "Basic",
+						"Fancy"
+                    ],
+                    "Value": 1,
+                    "Name": "NotifTextType",
+                    "Description": "In What Form Notification Text Will Be Displayed",
+                    "$version": "v1",
+                    "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.MultipleChoiceKey"
+                }
+            ],
+            "$version": "v1"
+        }
+    ]
+}

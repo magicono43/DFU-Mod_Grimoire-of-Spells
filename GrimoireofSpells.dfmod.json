@@ -1,0 +1,14 @@
+{
+    "ModTitle": "GrimoireofSpells",
+    "ModVersion": "1.00",
+    "ModAuthor": "Kirk.O",
+    "ContactInfo": "kirkoliveri@gmail.com",
+    "DFUnity_Version": "0.13.5",
+    "ModDescription": "Adds Dozens Of New Spell Effects Into Daggerfall, Also Improving Some Vanilla Spells.",
+    "GUID": "5b8216yd-9b84-4deb-a32d-83fc4bf043d0",
+    "Files": [
+        "Assets/Game/Mods/DFU-Mod_Viewable-Skill-Progress/modsettings.json",
+        "Assets/Game/Mods/DFU-Mod_Viewable-Skill-Progress/Scripts/VSPCharacterSheetOverride.cs",
+        "Assets/Game/Mods/DFU-Mod_Viewable-Skill-Progress/Scripts/ViewableSkillProgressMain.cs"
+    ]
+}
