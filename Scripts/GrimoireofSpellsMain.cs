@@ -4,22 +4,20 @@
 // Author:          Kirk.O
 // Version:			v.1.21
 // Created On: 	    8/9/2022, 11:00 PM
-// Last Edit:		8/9/2022, 11:00 PM
+// Last Edit:		8/13/2022, 6:30 PM
 // Modifier:
 // Special Thanks:  DunnyOfPenwick, Kab the Bird Ranger, Hazelnut, Interkarma
 
 using DaggerfallConnect;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
-using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
 using DaggerfallWorkshop.Game.UserInterfaceWindows;
 using UnityEngine;
 using DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings;
-using System.Collections.Generic;
-using DaggerfallWorkshop.Game.Utility;
 using DaggerfallWorkshop.Game.Serialization;
 using System;
+using DaggerfallWorkshop.Game.MagicAndEffects;
 
 namespace GrimoireofSpells
 {
@@ -62,10 +60,26 @@ namespace GrimoireofSpells
 
             mod.LoadSettings();
 
+            RegisterSpells();
+
             UIWindowFactory.RegisterCustomUIWindow(UIWindowType.CharacterSheet, typeof(VSPCharacterSheetOverride));
             Debug.Log("GrimoireofSpells Registered Override For DaggerfallCharacterSheetWindow");
 
             Debug.Log("Finished mod init: Grimoire of Spells");
+        }
+
+        private void RegisterSpells()
+        {
+            EntityEffectBroker effectBroker = GameManager.Instance.EntityEffectBroker;
+
+            Purify purifyTemplateEffect = new Purify();
+            effectBroker.RegisterEffectTemplate(purifyTemplateEffect);
+
+            ThePenwickPapers.Seeking effect = new ThePenwickPapers.Seeking();
+            //effect.SetCustomName(ThePenwickPapers.Text.SeekingPotionName.Get());
+            effectBroker.RegisterEffectTemplate(effect, true);
+            PotionRecipe recipe = effectBroker.GetEffectPotionRecipe(effect);
+            //potionOfSeekingRecipeKey = recipe.GetHashCode();
         }
 
         #region Settings
@@ -80,9 +94,6 @@ namespace GrimoireofSpells
 
         private void FixedUpdate()
         {
-            if (!SkillReadyNotifications)
-                return;
-
             if (SaveLoadManager.Instance.LoadInProgress)
                 return;
 
@@ -91,30 +102,11 @@ namespace GrimoireofSpells
 
             FixedUpdateCounter++; // Increments the FixedUpdateCounter by 1 every FixedUpdate.
 
-            if (FixedUpdateCounter >= 50 * NotificationCheckFrequency) // 50 FixedUpdates is approximately equal to 1 second since each FixedUpdate happens every 0.02 seconds, that's what Unity docs say at least.
+            if (FixedUpdateCounter >= 50 * 1) // 50 FixedUpdates is approximately equal to 1 second since each FixedUpdate happens every 0.02 seconds, that's what Unity docs say at least.
             {
                 FixedUpdateCounter = 0;
 
-                if (playerSkills.Count > 0)
-                {
-                    for (int i = 0; i < playerSkills.Count; i++)
-                    {
-                        float cT = VSPCharacterSheetOverride.CurrentTallyCount(playerSkills[i]);
-                        float aT = VSPCharacterSheetOverride.TallysNeededToAdvance(playerSkills[i]);
-                        if (cT > aT)
-                            cT = aT;
 
-                        if (notifiedSkillsList[i] == 1 && cT < aT)
-                            notifiedSkillsList[i] = 0;
-
-                        if (notifiedSkillsList[i] == 0 && cT >= aT)
-                        {
-                            notifiedSkillsList[i] = 1;
-
-                            NotifyPlayer(playerSkills[i]);
-                        }
-                    }
-                }
             }
         }
 

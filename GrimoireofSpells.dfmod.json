@@ -5,10 +5,10 @@
     "ContactInfo": "kirkoliveri@gmail.com",
     "DFUnity_Version": "0.13.5",
     "ModDescription": "Adds Dozens Of New Spell Effects Into Daggerfall, Also Improving Some Vanilla Spells.",
-    "GUID": "5b8216yd-9b84-4deb-a32d-83fc4bf043d0",
+    "GUID": "f51dfd99-b3b2-43b4-892f-1dcd54ed3c02",
     "Files": [
-        "Assets/Game/Mods/DFU-Mod_Viewable-Skill-Progress/modsettings.json",
-        "Assets/Game/Mods/DFU-Mod_Viewable-Skill-Progress/Scripts/VSPCharacterSheetOverride.cs",
-        "Assets/Game/Mods/DFU-Mod_Viewable-Skill-Progress/Scripts/ViewableSkillProgressMain.cs"
+        "Assets/Game/Mods/DFU-Mod_Grimoire-of-Spells/Scripts/GrimoireofSpellsMain.cs",
+        "Assets/Game/Mods/DFU-Mod_Grimoire-of-Spells/modsettings.json",
+        "Assets/Game/Mods/DFU-Mod_Grimoire-of-Spells/Scripts/Restoration/Purify.cs"
     ]
 }
