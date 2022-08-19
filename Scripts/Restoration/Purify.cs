@@ -16,7 +16,7 @@ namespace GrimoireofSpells
         {
             properties.Key = effectKey;
             properties.ShowSpellIcon = false;
-            properties.AllowedTargets = TargetTypes.CasterOnly | TargetTypes.ByTouch; // This might not work, but will have to see.
+            properties.AllowedTargets = TargetTypes.CasterOnly | TargetTypes.ByTouch; // Apparently this does work, which is pretty cool.
             properties.AllowedElements = EntityEffectBroker.ElementFlags_MagicOnly;
             properties.AllowedCraftingStations = MagicCraftingStations.SpellMaker; // Will probably add potion maker as well later, but for now just spells probably.
             properties.MagicSkill = DFCareer.MagicSkills.Restoration;

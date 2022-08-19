@@ -5,29 +5,34 @@ using DaggerfallWorkshop.Game.MagicAndEffects;
 using DaggerfallConnect;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop;
+using System.Collections.Generic;
 
 namespace GrimoireofSpells
 {
-    public class TransmuteEffect : BaseEntityEffect
+    public class TransmuteBody : CurseEffect
     {
-        private static readonly string effectKey = "TransmuteEffect";
+        private static readonly string effectKey = "Transmute-Body";
 
         public override void SetProperties()
         {
             properties.Key = effectKey;
-            properties.ShowSpellIcon = false;
-            properties.AllowedTargets = TargetTypes.CasterOnly | TargetTypes.ByTouch; // This might not work, but will have to see.
+            properties.ShowSpellIcon = true;
+            properties.AllowedTargets = TargetTypes.CasterOnly;
             properties.AllowedElements = EntityEffectBroker.ElementFlags_MagicOnly;
-            properties.AllowedCraftingStations = MagicCraftingStations.SpellMaker; // Will probably add potion maker as well later, but for now just spells probably.
-            properties.MagicSkill = DFCareer.MagicSkills.Restoration;
+            properties.AllowedCraftingStations = MagicCraftingStations.SpellMaker;
+            properties.MagicSkill = DFCareer.MagicSkills.Alteration;
             properties.DisableReflectiveEnumeration = true;
-            properties.SupportChance = true;
-            properties.ChanceCosts = MakeEffectCosts(8, 100, 200); // These values will have to be adjusted heavily, basically just placeholder for now.
+
+            curseChecks[0] = true; // Strength
+            curseChecks[3] = true; // Agility
+            curseChecks[4] = true; // Endurance
+            curseChecks[6] = true; // Speed
         }
 
         #region Text
 
-        public override string GroupName => "TransmuteEffect"; // Also remember to add potion effects for these later, this one will possibly change the vanilla purification potions if possible.
+        public override string GroupName => "Transmute"; // Tomorrow, work on the text part to explain how this effect works, then basically copy/paste the others and possibly do testing afterward.
+        public override string SubGroupName => "Body";
         const string effectDescription = "Purifies target of most afflictions and magical effects.";
         public override TextFile.Token[] SpellMakerDescription => GetSpellMakerDescription();
         public override TextFile.Token[] SpellBookDescription => GetSpellBookDescription();
@@ -56,22 +61,22 @@ namespace GrimoireofSpells
 
         #endregion
 
-        public override void MagicRound() // Will have to decide later if I should also heal all attributes as well or not, might make another effect or something for that.
+        public override void Start(EntityEffectManager manager, DaggerfallEntityBehaviour caster = null)
         {
-            base.MagicRound();
+            base.Start(manager, caster);
 
             // Get peered entity gameobject
             DaggerfallEntityBehaviour entityBehaviour = GetPeeredEntityBehaviour(manager);
             if (!entityBehaviour)
                 return;
 
-            // Implement effect
-            manager.CureAllPoisons();
-            manager.CureAllDiseases();
-            manager.EndIncumbentEffect<Paralyze>();
-            manager.ClearSpellBundles();
+            // Attempt to determine points to restore based on amount of total points "cursed" by the effect, will need to do testing to ensure "lastMagnitudeIncreaseAmount" is accurate here.
+            int magnitude = (int)Mathf.Ceil(lastMagnitudeIncreaseAmount * 4f * 7.5f); // Values will likely be heavily changed in the future, just place-holder for now.
 
-            Debug.LogFormat("Purified entity of all poisons, diseases, paralysis, and magic effects");
+            // Restore magic points
+            entityBehaviour.Entity.IncreaseMagicka(magnitude);
+
+            UnityEngine.Debug.LogFormat("{0} restored {1}'s magicka by {2} points", Key, entityBehaviour.EntityType.ToString(), magnitude);
         }
     }
 }

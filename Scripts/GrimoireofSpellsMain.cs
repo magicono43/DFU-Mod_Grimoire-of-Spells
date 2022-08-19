@@ -4,7 +4,7 @@
 // Author:          Kirk.O
 // Version:			v.1.21
 // Created On: 	    8/9/2022, 11:00 PM
-// Last Edit:		8/13/2022, 6:30 PM
+// Last Edit:		8/13/2022, 11:00 PM
 // Modifier:
 // Special Thanks:  DunnyOfPenwick, Kab the Bird Ranger, Hazelnut, Interkarma
 
@@ -74,6 +74,9 @@ namespace GrimoireofSpells
 
             Purify purifyTemplateEffect = new Purify();
             effectBroker.RegisterEffectTemplate(purifyTemplateEffect);
+
+            Invigorate invigorateTemplateEffect = new Invigorate();
+            effectBroker.RegisterEffectTemplate(invigorateTemplateEffect);
 
             ThePenwickPapers.Seeking effect = new ThePenwickPapers.Seeking();
             //effect.SetCustomName(ThePenwickPapers.Text.SeekingPotionName.Get());
