@@ -10,7 +10,7 @@ namespace GrimoireofSpells
 {
     public class Purify : BaseEntityEffect
     {
-        private static readonly string effectKey = "Purify";
+        public static readonly string effectKey = "Purify";
 
         public override void SetProperties()
         {

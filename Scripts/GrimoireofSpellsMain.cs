@@ -18,6 +18,7 @@ using DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings;
 using DaggerfallWorkshop.Game.Serialization;
 using System;
 using DaggerfallWorkshop.Game.MagicAndEffects;
+using static DaggerfallWorkshop.Game.MagicAndEffects.EntityEffectBroker;
 
 namespace GrimoireofSpells
 {
@@ -62,6 +63,8 @@ namespace GrimoireofSpells
 
             RegisterSpells();
 
+            RegisterTransmuteSpells();
+
             UIWindowFactory.RegisterCustomUIWindow(UIWindowType.CharacterSheet, typeof(VSPCharacterSheetOverride));
             Debug.Log("GrimoireofSpells Registered Override For DaggerfallCharacterSheetWindow");
 
@@ -83,6 +86,108 @@ namespace GrimoireofSpells
             effectBroker.RegisterEffectTemplate(effect, true);
             PotionRecipe recipe = effectBroker.GetEffectPotionRecipe(effect);
             //potionOfSeekingRecipeKey = recipe.GetHashCode();
+        }
+
+        private void RegisterTransmuteSpells() // I will want to consolidate this registration code more later if possible, atm kind of messy.
+        {
+            EntityEffectBroker effectBroker = GameManager.Instance.EntityEffectBroker;
+
+            // Register Transmute Body, Mind, and Soul Effects
+            for (int i = 0; i < Transmute.totalVariants; i++)
+            {
+                Transmute transmuteTemplateEffect = new Transmute();
+                transmuteTemplateEffect.CurrentVariant = i;
+                effectBroker.RegisterEffectTemplate(transmuteTemplateEffect);
+
+                EffectEntry transmuteEffectEntry = new EffectEntry()
+                {
+                    Key = transmuteTemplateEffect.Properties.Key,
+                };
+
+                EffectBundleSettings transmuteVariantSpell = new EffectBundleSettings()
+                {
+                    Version = CurrentSpellVersion,
+                    BundleType = BundleTypes.Spell,
+                    TargetType = TargetTypes.CasterOnly,
+                    ElementType = ElementTypes.Magic,
+                    Name = "Transmute " + Transmute.subGroupKeys[i],
+                    IconIndex = 10 + i, // Change this to a custom spell icon later, most likely.
+                    MinimumCastingCost = true,
+                    Tag = "lycanthrope", // I'll probably have to do another work-around method for this to try and make it 0 mana cost, this will be removed if Lycanthropy is cured and other stuff.
+                    Effects = new EffectEntry[] { transmuteEffectEntry },
+                };
+
+                CustomSpellBundleOffer transmuteVariantOffer = new CustomSpellBundleOffer()
+                {
+                    Key = "Transmute" + Transmute.subGroupKeys[i] + "-CustomOffer",
+                    Usage = CustomSpellBundleOfferUsage.SpellsForSale,
+                    BundleSetttings = transmuteVariantSpell,
+                };
+
+                effectBroker.RegisterCustomSpellBundleOffer(transmuteVariantOffer);
+            }
+
+            // Register Transmute Life
+            TransmuteLife transmuteLifeTemplateEffect = new TransmuteLife();
+            effectBroker.RegisterEffectTemplate(transmuteLifeTemplateEffect);
+
+            EffectEntry transmuteLifeEffectEntry = new EffectEntry()
+            {
+                Key = transmuteLifeTemplateEffect.Properties.Key,
+            };
+
+            EffectBundleSettings transmuteLifeSpell = new EffectBundleSettings()
+            {
+                Version = CurrentSpellVersion,
+                BundleType = BundleTypes.Spell,
+                TargetType = TargetTypes.CasterOnly,
+                ElementType = ElementTypes.Magic,
+                Name = "Transmute Life",
+                IconIndex = 16, // Change this to a custom spell icon later, most likely.
+                MinimumCastingCost = true,
+                Tag = "lycanthrope", // I'll probably have to do another work-around method for this to try and make it 0 mana cost, this will be removed if Lycanthropy is cured and other stuff.
+                Effects = new EffectEntry[] { transmuteLifeEffectEntry },
+            };
+
+            CustomSpellBundleOffer transmuteLifeOffer = new CustomSpellBundleOffer()
+            {
+                Key = "TransmuteLife-CustomOffer",
+                Usage = CustomSpellBundleOfferUsage.SpellsForSale,
+                BundleSetttings = transmuteLifeSpell,
+            };
+
+            effectBroker.RegisterCustomSpellBundleOffer(transmuteLifeOffer);
+
+            // Register Transmute Energy
+            TransmuteEnergy transmuteEnergyTemplateEffect = new TransmuteEnergy();
+            effectBroker.RegisterEffectTemplate(transmuteEnergyTemplateEffect);
+
+            EffectEntry transmuteEnergyEffectEntry = new EffectEntry()
+            {
+                Key = transmuteEnergyTemplateEffect.Properties.Key,
+            };
+
+            EffectBundleSettings transmuteEnergySpell = new EffectBundleSettings()
+            {
+                Version = CurrentSpellVersion,
+                BundleType = BundleTypes.Spell,
+                TargetType = TargetTypes.CasterOnly,
+                ElementType = ElementTypes.Magic,
+                Name = "Transmute Energy",
+                IconIndex = 17, // Change this to a custom spell icon later, most likely.
+                MinimumCastingCost = true,
+                Tag = "lycanthrope", // I'll probably have to do another work-around method for this to try and make it 0 mana cost, this will be removed if Lycanthropy is cured and other stuff.
+                Effects = new EffectEntry[] { transmuteEnergyEffectEntry },
+            };
+
+            CustomSpellBundleOffer transmuteEnergyOffer = new CustomSpellBundleOffer()
+            {
+                Key = "TransmuteEnergy-CustomOffer",
+                Usage = CustomSpellBundleOfferUsage.SpellsForSale,
+                BundleSetttings = transmuteLifeSpell,
+            };
+
+            effectBroker.RegisterCustomSpellBundleOffer(transmuteEnergyOffer);
         }
 
         #region Settings

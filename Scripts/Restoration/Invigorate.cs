@@ -11,7 +11,7 @@ namespace GrimoireofSpells
 {
     public class Invigorate : IncumbentEffect
     {
-        private static readonly string effectKey = "Invigorate";
+        public static readonly string effectKey = "Invigorate";
 
         public override void SetProperties()
         {

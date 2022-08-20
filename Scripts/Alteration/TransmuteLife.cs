@@ -8,27 +8,22 @@ using DaggerfallWorkshop;
 
 namespace GrimoireofSpells
 {
-    public class TransmuteLife : TransmuteEffect
+    public class TransmuteLife : BaseEntityEffect
     {
-        private static readonly string effectKey = "TransmuteLife";
+        private static readonly string effectKey = "Transmute-Life";
 
         public override void SetProperties()
         {
             properties.Key = effectKey;
-            properties.ShowSpellIcon = false;
-            properties.AllowedTargets = TargetTypes.CasterOnly | TargetTypes.ByTouch; // This might not work, but will have to see.
+            properties.AllowedTargets = TargetTypes.CasterOnly;
             properties.AllowedElements = EntityEffectBroker.ElementFlags_MagicOnly;
-            properties.AllowedCraftingStations = MagicCraftingStations.SpellMaker; // Will probably add potion maker as well later, but for now just spells probably.
-            properties.MagicSkill = DFCareer.MagicSkills.Restoration;
+            properties.MagicSkill = DFCareer.MagicSkills.Alteration;
             properties.DisableReflectiveEnumeration = true;
-            properties.SupportChance = true;
-            properties.ChanceCosts = MakeEffectCosts(8, 100, 200); // These values will have to be adjusted heavily, basically just placeholder for now.
         }
 
         #region Text
 
-        public override string GroupName => "TransmuteLife"; // Also remember to add potion effects for these later, this one will possibly change the vanilla purification potions if possible.
-        const string effectDescription = "Purifies target of most afflictions and magical effects.";
+        public override string GroupName => "Transmute Life";
         public override TextFile.Token[] SpellMakerDescription => GetSpellMakerDescription();
         public override TextFile.Token[] SpellBookDescription => GetSpellBookDescription();
 
@@ -37,10 +32,10 @@ namespace GrimoireofSpells
             return DaggerfallUnity.Instance.TextProvider.CreateTokens(
                 TextFile.Formatting.JustifyCenter,
                 GroupName,
-                effectDescription,
+                "Drains the caster's life force, in exchange for magicka points.",
                 "Duration: Instantaneous.",
-                "Chance: % Chance purification will succeed.",
-                "Magnitude: N/A");
+                "Chance: N/A",
+                "Magnitude: Unpredictable.");
         }
 
         private TextFile.Token[] GetSpellBookDescription()
@@ -49,14 +44,14 @@ namespace GrimoireofSpells
                 TextFile.Formatting.JustifyCenter,
                 GroupName,
                 "Duration: Instantaneous.",
-                "Chance: %bch + %ach per %clc level(s)",
-                "Magnitude: N/A",
-                effectDescription);
+                "Chance: N/A",
+                "Magnitude: Unpredictable.",
+                "Drains the caster's life force, in exchange for magicka points.");
         }
 
         #endregion
 
-        public override void MagicRound() // Will have to decide later if I should also heal all attributes as well or not, might make another effect or something for that.
+        public override void MagicRound() // Will potentially change this to an incumbent effect later to reduce maximum health and such, but for now just do this simple implementation.
         {
             base.MagicRound();
 
@@ -65,13 +60,18 @@ namespace GrimoireofSpells
             if (!entityBehaviour)
                 return;
 
-            // Implement effect
-            manager.CureAllPoisons();
-            manager.CureAllDiseases();
-            manager.EndIncumbentEffect<Paralyze>();
-            manager.ClearSpellBundles();
+            int minHPDrained = (int)Mathf.Ceil(entityBehaviour.Entity.MaxHealth * 0.10f); // 10% of max HP
+            int maxHPDrained = (int)Mathf.Ceil(entityBehaviour.Entity.MaxHealth * 0.20f); // 20% of max HP
+            int drainedHP = Random.Range(minHPDrained, maxHPDrained + 1);
+            int manaRestored = (int)Mathf.Ceil(drainedHP * 2f); // Values will likely be heavily changed in the future, just place-holder for now.
 
-            Debug.LogFormat("Purified entity of all poisons, diseases, paralysis, and magic effects");
+            // Drain health
+            entityBehaviour.Entity.SetHealth(entityBehaviour.Entity.CurrentHealth - drainedHP); // Using SetHealth because "DecreaseHealth" goes through magical shields first, which I don't want here.
+
+            // Restore magic points
+            entityBehaviour.Entity.IncreaseMagicka(manaRestored);
+
+            UnityEngine.Debug.LogFormat("{0} drained {1}'s health by {2} points, but in return restored {3} magicka points.", Key, entityBehaviour.EntityType.ToString(), drainedHP, manaRestored);
         }
     }
 }
