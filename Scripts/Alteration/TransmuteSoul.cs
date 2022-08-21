@@ -23,7 +23,7 @@ namespace GrimoireofSpells
 
         // Wil, Luc
         protected int[] magStats = { 0, 0, 0, 0, 0, 0, 0, 0 };
-        protected bool[] curseChecks = { false, true, false, false, false, false, false, true };
+        protected bool[] curseChecks = { false, false, true, false, false, false, false, true };
         protected int lastMagnitudeIncreaseAmount = 0;
         int forcedRoundsRemaining = 3;
 
