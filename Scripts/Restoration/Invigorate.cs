@@ -71,7 +71,7 @@ namespace GrimoireofSpells
 
         protected override bool IsLikeKind(IncumbentEffect other)
         {
-            return (other is Invigorate);
+            return other is Invigorate;
         }
 
         protected override void AddState(IncumbentEffect incumbent)

@@ -92,17 +92,30 @@ namespace GrimoireofSpells
         {
             EntityEffectBroker effectBroker = GameManager.Instance.EntityEffectBroker;
 
+            // The Transmute Life effect appeared to work fine, but the Transmute Body was not working as expected, also the icon was flashing but not going away, just a note on that.
+            // The Transmute Energy effect seems to be draining fatigue way too much in one cast, will need to troubleshoot and fix that one.
+            // Also onto of the other issues not currently working with the "Transmute Attribute" effect, the bundles also don't seem to be properly detecting incumbent of each other?
+            // Tomorrow work on these issues and try to resolve this effect so I can start on the next ones and such, this one is taking more time than expected.
+            // Tomorrow again, now with the more simple but less "elegant" solution, finish this effect tomorrow after more testing and such and move onto the next finally.
+
+            Transmute transmuteTemplateEffect = new Transmute();
+            effectBroker.RegisterEffectTemplate(transmuteTemplateEffect);
+
             // Register Transmute Body, Mind, and Soul Effects
             for (int i = 0; i < Transmute.totalVariants; i++)
             {
-                Transmute transmuteTemplateEffect = new Transmute();
-                transmuteTemplateEffect.CurrentVariant = i;
-                effectBroker.RegisterEffectTemplate(transmuteTemplateEffect);
+                BaseEntityEffect variantEffect = effectBroker.CloneEffect(transmuteTemplateEffect) as BaseEntityEffect; // Check this out with a break-point after eating, etc. Better so far though.
+                variantEffect.CurrentVariant = i;
 
                 EffectEntry transmuteEffectEntry = new EffectEntry()
                 {
-                    Key = transmuteTemplateEffect.Properties.Key,
+                    Key = variantEffect.Key,
                 };
+
+                /*EffectEntry transmuteEffectEntry = new EffectEntry()
+                {
+                    Key = transmuteTemplateEffect.Properties.Key,
+                };*/
 
                 EffectBundleSettings transmuteVariantSpell = new EffectBundleSettings()
                 {
@@ -111,7 +124,7 @@ namespace GrimoireofSpells
                     TargetType = TargetTypes.CasterOnly,
                     ElementType = ElementTypes.Magic,
                     Name = "Transmute " + Transmute.subGroupKeys[i],
-                    IconIndex = 10 + i, // Change this to a custom spell icon later, most likely.
+                    IconIndex = 2 + i, // Change this to a custom spell icon later, most likely.
                     MinimumCastingCost = true,
                     Tag = "lycanthrope", // I'll probably have to do another work-around method for this to try and make it 0 mana cost, this will be removed if Lycanthropy is cured and other stuff.
                     Effects = new EffectEntry[] { transmuteEffectEntry },
@@ -143,7 +156,7 @@ namespace GrimoireofSpells
                 TargetType = TargetTypes.CasterOnly,
                 ElementType = ElementTypes.Magic,
                 Name = "Transmute Life",
-                IconIndex = 16, // Change this to a custom spell icon later, most likely.
+                IconIndex = 6, // Change this to a custom spell icon later, most likely.
                 MinimumCastingCost = true,
                 Tag = "lycanthrope", // I'll probably have to do another work-around method for this to try and make it 0 mana cost, this will be removed if Lycanthropy is cured and other stuff.
                 Effects = new EffectEntry[] { transmuteLifeEffectEntry },
@@ -174,7 +187,7 @@ namespace GrimoireofSpells
                 TargetType = TargetTypes.CasterOnly,
                 ElementType = ElementTypes.Magic,
                 Name = "Transmute Energy",
-                IconIndex = 17, // Change this to a custom spell icon later, most likely.
+                IconIndex = 7, // Change this to a custom spell icon later, most likely.
                 MinimumCastingCost = true,
                 Tag = "lycanthrope", // I'll probably have to do another work-around method for this to try and make it 0 mana cost, this will be removed if Lycanthropy is cured and other stuff.
                 Effects = new EffectEntry[] { transmuteEnergyEffectEntry },
@@ -184,7 +197,7 @@ namespace GrimoireofSpells
             {
                 Key = "TransmuteEnergy-CustomOffer",
                 Usage = CustomSpellBundleOfferUsage.SpellsForSale,
-                BundleSetttings = transmuteLifeSpell,
+                BundleSetttings = transmuteEnergySpell,
             };
 
             effectBroker.RegisterCustomSpellBundleOffer(transmuteEnergyOffer);

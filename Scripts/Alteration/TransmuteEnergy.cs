@@ -66,7 +66,7 @@ namespace GrimoireofSpells
             int manaRestored = (int)Mathf.Ceil(drainedFatigue * 1f); // Values will likely be heavily changed in the future, just place-holder for now.
 
             // Drain fatigue
-            entityBehaviour.Entity.DecreaseFatigue(drainedFatigue, true);
+            entityBehaviour.Entity.DecreaseFatigue(drainedFatigue, true); // Need to do more testing for this, seems like too much being drained in one cast. Remove "True" later for testing to see if issue.
 
             // Restore magic points
             entityBehaviour.Entity.IncreaseMagicka(manaRestored);

@@ -1,10 +1,12 @@
 using UnityEngine;
 using DaggerfallWorkshop.Game.MagicAndEffects.MagicEffects;
+using DaggerfallConnect.Arena2;
 using DaggerfallWorkshop.Game.MagicAndEffects;
 using DaggerfallConnect;
 using DaggerfallWorkshop.Game.Entity;
-using DaggerfallWorkshop.Game;
+using DaggerfallWorkshop;
 using FullSerializer;
+using DaggerfallWorkshop.Game;
 
 namespace GrimoireofSpells
 {
@@ -15,23 +17,64 @@ namespace GrimoireofSpells
     /// will only add to total magnitude of first effect of this type.
     /// Incumbent curse effect persists indefinitely until player heals stat enough for magnitude to reach 0.
     /// </summary>
-    public abstract class CurseEffect : IncumbentEffect
+    public class TransmuteSoul : IncumbentEffect
     {
-        // Str, Int, Wil, Agi, End, Per, Spe, Luc
+        public static readonly string effectKey = "Transmute-Soul";
+
+        // Wil, Luc
         protected int[] magStats = { 0, 0, 0, 0, 0, 0, 0, 0 };
-        protected bool[] curseChecks = { false, false, false, false, false, false, false, false };
+        protected bool[] curseChecks = { false, true, false, false, false, false, false, true };
         protected int lastMagnitudeIncreaseAmount = 0;
-        int forcedRoundsRemaining = 1;
+        int forcedRoundsRemaining = 3;
 
         public int[] Magnitudes
         {
             get { return magStats; }
         }
 
-        public bool[] CursedStatChecks
+        public override void SetProperties()
         {
-            get { return curseChecks; }
+            properties.Key = effectKey;
+            properties.ShowSpellIcon = true;
+            properties.AllowedTargets = TargetTypes.CasterOnly;
+            properties.AllowedElements = EntityEffectBroker.ElementFlags_MagicOnly;
+            properties.MagicSkill = DFCareer.MagicSkills.Alteration;
+            properties.DisableReflectiveEnumeration = true;
         }
+
+        #region Text
+
+        public override string GroupName => "Transmute Soul";
+        public override TextFile.Token[] SpellMakerDescription => GetSpellMakerDescription();
+        public override TextFile.Token[] SpellBookDescription => GetSpellBookDescription();
+
+        private TextFile.Token[] GetSpellMakerDescription() // Will definitely want to change the descriptions after testing and such, place-holder for now.
+        {
+            return DaggerfallUnity.Instance.TextProvider.CreateTokens(
+                TextFile.Formatting.JustifyCenter,
+                GroupName,
+                "Curses the caster's Willpower and Luck,",
+                "in exchange for magicka points.",
+                "Curses are a more difficult to remove 'drained' effect.",
+                "Duration: Instantaneous.",
+                "Chance: N/A",
+                "Magnitude: Unpredictable.");
+        }
+
+        private TextFile.Token[] GetSpellBookDescription()
+        {
+            return DaggerfallUnity.Instance.TextProvider.CreateTokens(
+                TextFile.Formatting.JustifyCenter,
+                GroupName,
+                "Duration: Instantaneous.",
+                "Chance: N/A",
+                "Magnitude: Unpredictable.",
+                "Curses the caster's Willpower and Luck,",
+                "in exchange for magicka points.",
+                "Curses are a more difficult to remove 'drained' effect.");
+        }
+
+        #endregion
 
         // Curse effects are permanent until healed so we manage our own lifecycle
         protected override int RemoveRound()
@@ -39,7 +82,7 @@ namespace GrimoireofSpells
             return forcedRoundsRemaining;
         }
 
-        // Always present at least one round remaining so effect system does not remove
+        // Always present at least one round remaining so effect system does not remove, 3 in this case so the icon stays solid instead of constantly blinking
         public override int RoundsRemaining
         {
             get { return forcedRoundsRemaining; }
@@ -48,26 +91,24 @@ namespace GrimoireofSpells
         public override void Start(EntityEffectManager manager, DaggerfallEntityBehaviour caster = null)
         {
             base.Start(manager, caster);
-            PlayerAggro();
+
+            // Get peered entity gameobject
+            DaggerfallEntityBehaviour entityBehaviour = GetPeeredEntityBehaviour(manager);
+            if (!entityBehaviour)
+                return;
+
+            // Attempt to determine points to restore based on amount of total points "cursed" by the effect, will need to do testing to ensure "lastMagnitudeIncreaseAmount" is accurate here.
+            int magnitude = (int)Mathf.Ceil(lastMagnitudeIncreaseAmount * 4f * 7.5f); // Values will likely be heavily changed in the future, just place-holder for now.
+
+            // Restore magic points
+            entityBehaviour.Entity.IncreaseMagicka(magnitude);
+
+            UnityEngine.Debug.LogFormat("{0} restored {1}'s magicka by {2} points", Key, entityBehaviour.EntityType.ToString(), magnitude);
         }
 
         protected override bool IsLikeKind(IncumbentEffect other)
         {
-            CurseEffect otherCurse;
-
-            if (other is CurseEffect)
-            {
-                otherCurse = other as CurseEffect;
-
-                for (int i = 0; i < otherCurse.curseChecks.Length; i++)
-                {
-                    if (otherCurse.curseChecks[i] && curseChecks[i])
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
+            return other is TransmuteSoul;
         }
 
         protected override void BecomeIncumbent()
@@ -88,29 +129,14 @@ namespace GrimoireofSpells
             lastMagnitudeIncreaseAmount = GetMagnitude();
             if (lastMagnitudeIncreaseAmount > 0)
             {
-                (incumbent as CurseEffect).IncreaseMagnitude(lastMagnitudeIncreaseAmount);
+                (incumbent as TransmuteSoul).IncreaseMagnitude(lastMagnitudeIncreaseAmount);
                 ShowPlayerCursed();
             }
         }
 
         protected int GetMagnitude()
         {
-            int statsCurseEffects = 0;
-
-            for (int i = 0; i < curseChecks.Length; i++)
-            {
-                if (curseChecks[i])
-                {
-                    statsCurseEffects++;
-                }
-            }
-
-            if (statsCurseEffects == 2)
-                return Random.Range(2, 9);
-            else if (statsCurseEffects == 4)
-                return Random.Range(1, 5);
-            else
-                return Random.Range(1, 5);
+            return Random.Range(2, 9);
         }
 
         public override void HealAttributeDamage(DFCareer.Stats stat, int amount)
@@ -119,15 +145,7 @@ namespace GrimoireofSpells
             if (!IsIncumbent)
                 return;
 
-            bool pairCheck = false;
-
-            for (int i = 0; i < curseChecks.Length; i++)
-            {
-                if (curseChecks[i] && stat == (DFCareer.Stats)i)
-                    pairCheck = true;
-            }
-
-            if (!pairCheck)
+            if (!(stat == DFCareer.Stats.Willpower || stat == DFCareer.Stats.Luck))
                 return;
 
             int magnitude = magStats[(int)stat];
@@ -153,22 +171,8 @@ namespace GrimoireofSpells
                 if (manager.EntityBehaviour == GameManager.Instance.PlayerEntityBehaviour)
                     DaggerfallUI.AddHUDText("The curse on your " + stat.ToString() + " is lifted.", 1.5f); // The "ToString" thing might not work on an enum value, but will have to see.
 
-                int statsCurseEffects = 0;
-                int statMagsNowZero = 0;
-
-                for (int i = 0; i < curseChecks.Length; i++)
-                {
-                    if (curseChecks[i])
-                    {
-                        statsCurseEffects++;
-
-                        if (magStats[i] == 0)
-                            statMagsNowZero++;
-                    }
-                }
-
                 // When all cursed stats from this effect have had their respective magnitudes reduced to 0, cancel this entire effect. 
-                if (statsCurseEffects == statMagsNowZero)
+                if (magStats[(int)DFCareer.Stats.Willpower] == 0 && magStats[(int)DFCareer.Stats.Luck] == 0)
                     forcedRoundsRemaining = 0;
             }
         }
@@ -176,6 +180,7 @@ namespace GrimoireofSpells
         public override void CureAttributeDamage()
         {
             // Eventually add some alternate methods to remove curse effects, will have to see if this all works at all first anyway, etc.
+            // Also need a way to prevent just using dispel magic effect to remove a curse, maybe could make the effect a potion as an "easy" work-around for that?
 
             if (GameManager.Instance.PlayerEnterExit.IsPlayerInside)
             {
@@ -199,17 +204,13 @@ namespace GrimoireofSpells
 
         public void IncreaseMagnitude(int amount)
         {
-            for (int i = 0; i < curseChecks.Length; i++)
-            {
-                if (curseChecks[i])
-                {
-                    // Allow magnitude to reduce stat below 1. So stats reduced by a "curse" effect CAN kill you, unlike the drain effect which is stopped at 1.
-                    magStats[i] += amount * 30;
+            // Allow magnitude to reduce stat below 1. So stats reduced by a "curse" effect CAN kill you, unlike the drain effect which is stopped at 1.
+            magStats[(int)DFCareer.Stats.Willpower] += amount * 30;
+            magStats[(int)DFCareer.Stats.Luck] += amount * 30;
 
-                    // Thinking about making curses attribute damage be 10-30x more "sticky" than normal stat drain effects. So requires either much more "heal" or some other treatment/service to remove.
-                    SetStatMod((DFCareer.Stats)i, (int)Mathf.Ceil(-1 * (magStats[i] / 30)));
-                }
-            }
+            // Thinking about making curses attribute damage be 10-30x more "sticky" than normal stat drain effects. So requires either much more "heal" or some other treatment/service to remove.
+            SetStatMod(DFCareer.Stats.Willpower, (int)Mathf.Ceil(-1 * (magStats[(int)DFCareer.Stats.Willpower] / 30)));
+            SetStatMod(DFCareer.Stats.Luck, (int)Mathf.Ceil(-1 * (magStats[(int)DFCareer.Stats.Luck] / 30)));
         }
 
         public int DecreaseMagnitude(int amount, DFCareer.Stats stat)
