@@ -4,7 +4,7 @@
 // Author:          Kirk.O
 // Version:			v.1.21
 // Created On: 	    8/9/2022, 11:00 PM
-// Last Edit:		8/21/2022, 9:00 AM
+// Last Edit:		8/22/2022, 9:00 PM
 // Modifier:
 // Special Thanks:  DunnyOfPenwick, Kab the Bird Ranger, Hazelnut, Interkarma
 
@@ -63,6 +63,8 @@ namespace GrimoireofSpells
 
             RegisterSpells();
 
+            RegisterDisplacementSpells();
+
             RegisterTransmuteSpells();
 
             UIWindowFactory.RegisterCustomUIWindow(UIWindowType.CharacterSheet, typeof(VSPCharacterSheetOverride));
@@ -86,6 +88,79 @@ namespace GrimoireofSpells
             effectBroker.RegisterEffectTemplate(effect, true);
             PotionRecipe recipe = effectBroker.GetEffectPotionRecipe(effect);
             //potionOfSeekingRecipeKey = recipe.GetHashCode();
+        }
+
+        private void RegisterDisplacementSpells()
+        {
+            EntityEffectBroker effectBroker = GameManager.Instance.EntityEffectBroker;
+
+            // Register Blink
+            Blink BlinkTemplateEffect = new Blink();
+            effectBroker.RegisterEffectTemplate(BlinkTemplateEffect);
+
+            EffectSettings BlinkEffectSettings = new EffectSettings() // Just testing values for now.
+            {
+                MagnitudeBaseMin = 5,
+                MagnitudeBaseMax = 5,
+                MagnitudePlusMin = 0,
+                MagnitudePlusMax = 0,
+                MagnitudePerLevel = 1,
+            };
+
+            EffectEntry BlinkEffectEntry = new EffectEntry()
+            {
+                Key = BlinkTemplateEffect.Properties.Key,
+                Settings = BlinkEffectSettings,
+            };
+
+            EffectBundleSettings BlinkSpell = new EffectBundleSettings()
+            {
+                Version = CurrentSpellVersion,
+                BundleType = BundleTypes.Spell,
+                TargetType = TargetTypes.CasterOnly,
+                ElementType = ElementTypes.Magic,
+                Name = "Blink",
+                IconIndex = 12, // Change this to a custom spell icon later, most likely.
+                Effects = new EffectEntry[] { BlinkEffectEntry },
+            };
+
+            CustomSpellBundleOffer BlinkOffer = new CustomSpellBundleOffer()
+            {
+                Key = "Blink-CustomOffer",
+                Usage = CustomSpellBundleOfferUsage.SpellsForSale, // Will add more places this can be found later, such as enchantments and such.
+                BundleSetttings = BlinkSpell,
+            };
+
+            effectBroker.RegisterCustomSpellBundleOffer(BlinkOffer);
+
+            // Register Dislocate
+            Dislocate DislocateTemplateEffect = new Dislocate();
+            effectBroker.RegisterEffectTemplate(DislocateTemplateEffect);
+
+            EffectEntry DislocateEffectEntry = new EffectEntry()
+            {
+                Key = DislocateTemplateEffect.Properties.Key,
+            };
+
+            EffectBundleSettings DislocateSpell = new EffectBundleSettings()
+            {
+                Version = CurrentSpellVersion,
+                BundleType = BundleTypes.Spell,
+                TargetType = TargetTypes.SingleTargetAtRange,
+                ElementType = ElementTypes.Magic,
+                Name = "Dislocate",
+                IconIndex = 13, // Change this to a custom spell icon later, most likely.
+                Effects = new EffectEntry[] { DislocateEffectEntry },
+            };
+
+            CustomSpellBundleOffer DislocateOffer = new CustomSpellBundleOffer()
+            {
+                Key = "Dislocate-CustomOffer",
+                Usage = CustomSpellBundleOfferUsage.SpellsForSale, // Will add more places this can be found later, such as enchantments and such.
+                BundleSetttings = DislocateSpell,
+            };
+
+            effectBroker.RegisterCustomSpellBundleOffer(DislocateOffer);
         }
 
         private void RegisterTransmuteSpells() // I will want to consolidate this registration code more later if possible, atm kind of messy.
