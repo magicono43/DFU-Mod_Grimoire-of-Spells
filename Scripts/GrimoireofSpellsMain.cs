@@ -83,6 +83,10 @@ namespace GrimoireofSpells
             Invigorate invigorateTemplateEffect = new Invigorate();
             effectBroker.RegisterEffectTemplate(invigorateTemplateEffect);
 
+            // Register Manipulate Weather
+            ManipulateWeather manipulateWeatherTemplateEffect = new ManipulateWeather();
+            effectBroker.RegisterEffectTemplate(manipulateWeatherTemplateEffect);
+
             ThePenwickPapers.Seeking effect = new ThePenwickPapers.Seeking();
             //effect.SetCustomName(ThePenwickPapers.Text.SeekingPotionName.Get());
             effectBroker.RegisterEffectTemplate(effect, true);
@@ -146,7 +150,7 @@ namespace GrimoireofSpells
             {
                 Version = CurrentSpellVersion,
                 BundleType = BundleTypes.Spell,
-                TargetType = TargetTypes.SingleTargetAtRange,
+                TargetType = TargetTypes.CasterOnly,
                 ElementType = ElementTypes.Magic,
                 Name = "Dislocate",
                 IconIndex = 13, // Change this to a custom spell icon later, most likely.

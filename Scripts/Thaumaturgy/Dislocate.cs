@@ -17,7 +17,7 @@ namespace GrimoireofSpells
         {
             properties.Key = effectKey;
             properties.ShowSpellIcon = false;
-            properties.AllowedTargets = TargetTypes.SingleTargetAtRange;
+            properties.AllowedTargets = TargetTypes.CasterOnly;
             properties.AllowedElements = EntityEffectBroker.ElementFlags_MagicOnly;
             properties.AllowedCraftingStations = MagicCraftingStations.SpellMaker;
             properties.MagicSkill = DFCareer.MagicSkills.Thaumaturgy;
@@ -58,44 +58,85 @@ namespace GrimoireofSpells
 
         public override void Start(EntityEffectManager manager, DaggerfallEntityBehaviour caster = null) // Get this working tomorrow, where projectile hitting is the "trigger" and place to teleport, etc.
         {
-            base.Start(manager, caster);
+            base.Start(manager, caster); // Alright, so once again I'm just going to have to come back to this later, the projectile thing is confusing and fucking with me too much right now, move on.
 
             // Get peered entity gameobject
             DaggerfallEntityBehaviour entityBehaviour = GetPeeredEntityBehaviour(manager);
             if (!entityBehaviour)
                 return;
 
-            bool forceTeleOnNoHit = true;                //teleport maxDistance even if raycast doesn't hit
-            float maxDistance = GetMagnitude();          //max distance
-            int step = 0;
-            Vector3 dir = Camera.main.transform.up;
-            Vector3 loc;
-
-            RaycastHit hitInfo; // Will definitely want to change some of this later on to disallow some stuff like climbing up on falls you Dislocate into, instead to just place you at the bottom if possible.
-            Vector3 origin = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0));
-            Ray ray = new Ray(origin + Camera.main.transform.forward * .2f, Camera.main.transform.forward);
-            GameManager.Instance.AcrobatMotor.ClearFallingDamage();
-            if (!(Physics.Raycast(ray, out hitInfo, maxDistance)))
+            /*EffectBundleSettings bundleSettings;
+            if (bundleSettings.TargetType == TargetTypes.CasterOnly)
             {
-                Debug.Log("Didn't hit anything...");
-                if (forceTeleOnNoHit)
-                {
-                    GameManager.Instance.PlayerObject.transform.position = ray.GetPoint(maxDistance);
-                    Debug.Log("...teleporting anyways");
-                }
+                // Spell is readied on player for free
+                GameManager.Instance.PlayerEffectManager.SetReadySpell(thisAction.Index, true);
             }
             else
             {
-                loc = hitInfo.point;
-                while (Physics.CheckCapsule(loc, loc + dir, GameManager.Instance.PlayerController.radius + .1f) && step < 50) // Will have to look more into how this works to get better understanding.
+                // Spell is fired at player, at strength of player level, from triggering object
+                DaggerfallMissile missile = GameManager.Instance.PlayerEffectManager.InstantiateSpellMissile(bundleSettings.ElementType);
+                missile.Payload = new EntityEffectBundle(bundleSettings);
+                Vector3 customAimPosition = thisAction.transform.position;
+                customAimPosition.y += 40 * MeshReader.GlobalScale;
+                missile.CustomAimPosition = customAimPosition;
+                missile.CustomAimDirection = Vector3.Normalize(GameManager.Instance.PlayerObject.transform.position - thisAction.transform.position);
+
+                // If action spell payload is "touch" then set to "target at range" (targets player position as above)
+                if (missile.Payload.Settings.TargetType == TargetTypes.ByTouch)
                 {
-                    loc = dir + loc;
-                    step++;
+                    EffectBundleSettings settings = missile.Payload.Settings;
+                    settings.TargetType = TargetTypes.SingleTargetAtRange;
+                    missile.Payload.Settings = settings;
                 }
-                GameManager.Instance.PlayerObject.transform.position = loc;
+            }*/
+        }
+
+        // Get missile aim position from player or enemy mobile
+        /*Vector3 GetAimPosition()
+        {
+            // Aim position from custom source
+            if (CustomAimPosition != Vector3.zero)
+                return CustomAimPosition;
+
+            // Aim position is from eye level for player or origin for other mobile
+            // Player must aim from camera position or it feels out of alignment
+            Vector3 aimPosition = caster.transform.position;
+            if (caster == GameManager.Instance.PlayerEntityBehaviour)
+            {
+                aimPosition = GameManager.Instance.MainCamera.transform.position;
             }
 
-            Debug.LogFormat("Dislocate worked successfully...?");
+            return aimPosition;
         }
+
+        // Get missile aim direction from player or enemy mobile
+        Vector3 GetAimDirection()
+        {
+            // Aim direction from custom source
+            if (CustomAimDirection != Vector3.zero)
+                return CustomAimDirection;
+
+            // Aim direction should be from camera for player or facing for other mobile
+            Vector3 aimDirection = Vector3.zero;
+            if (caster == GameManager.Instance.PlayerEntityBehaviour)
+            {
+                aimDirection = GameManager.Instance.MainCamera.transform.forward;
+            }
+            else if (enemySenses)
+            {
+                Vector3 predictedPosition;
+                if (DaggerfallUnity.Settings.EnhancedCombatAI)
+                    predictedPosition = enemySenses.PredictNextTargetPos(MovementSpeed);
+                else
+                    predictedPosition = enemySenses.LastKnownTargetPos;
+
+                if (predictedPosition == EnemySenses.ResetPlayerPos)
+                    aimDirection = caster.transform.forward;
+                else
+                    aimDirection = (predictedPosition - caster.transform.position).normalized;
+            }
+
+            return aimDirection;
+        }*/
     }
 }

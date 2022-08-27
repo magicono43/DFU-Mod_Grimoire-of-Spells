@@ -9,17 +9,18 @@
     "Files": [
         "Assets/Game/Mods/DFU-Mod_Grimoire-of-Spells/modsettings.json",
         "Assets/Game/Mods/DFU-Mod_Grimoire-of-Spells/Scripts/GrimoireofSpellsMain.cs",
+        "Assets/Game/Mods/DFU-Mod_Grimoire-of-Spells/Scripts/Alteration/TransmuteBody.cs",
         "Assets/Game/Mods/DFU-Mod_Grimoire-of-Spells/Scripts/Restoration/Invigorate.cs",
         "Assets/Game/Mods/DFU-Mod_Grimoire-of-Spells/Scripts/Restoration/HealSoul.cs",
         "Assets/Game/Mods/DFU-Mod_Grimoire-of-Spells/Scripts/Restoration/Purify.cs",
-        "Assets/Game/Mods/DFU-Mod_Grimoire-of-Spells/Scripts/Restoration/HealMind.cs",
-        "Assets/Game/Mods/DFU-Mod_Grimoire-of-Spells/Scripts/Restoration/HealBody.cs",
-        "Assets/Game/Mods/DFU-Mod_Grimoire-of-Spells/Scripts/Alteration/TransmuteBody.cs",
         "Assets/Game/Mods/DFU-Mod_Grimoire-of-Spells/Scripts/Alteration/TransmuteLife.cs",
         "Assets/Game/Mods/DFU-Mod_Grimoire-of-Spells/Scripts/Alteration/TransmuteSoul.cs",
+        "Assets/Game/Mods/DFU-Mod_Grimoire-of-Spells/Scripts/Restoration/HealMind.cs",
         "Assets/Game/Mods/DFU-Mod_Grimoire-of-Spells/Scripts/Alteration/TransmuteEnergy.cs",
-        "Assets/Game/Mods/DFU-Mod_Grimoire-of-Spells/Scripts/Alteration/TransmuteMind.cs",
+        "Assets/Game/Mods/DFU-Mod_Grimoire-of-Spells/Scripts/Restoration/HealBody.cs",
         "Assets/Game/Mods/DFU-Mod_Grimoire-of-Spells/Scripts/Thaumaturgy/Blink.cs",
-        "Assets/Game/Mods/DFU-Mod_Grimoire-of-Spells/Scripts/Thaumaturgy/Dislocate.cs"
+        "Assets/Game/Mods/DFU-Mod_Grimoire-of-Spells/Scripts/Thaumaturgy/Dislocate.cs",
+        "Assets/Game/Mods/DFU-Mod_Grimoire-of-Spells/Scripts/Alteration/TransmuteMind.cs",
+        "Assets/Game/Mods/DFU-Mod_Grimoire-of-Spells/Scripts/Alteration/ManipulateWeather.cs"
     ]
 }

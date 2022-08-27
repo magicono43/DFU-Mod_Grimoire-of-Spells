@@ -11,7 +11,7 @@ namespace GrimoireofSpells
 {
     public class Blink : BaseEntityEffect
     {
-        public static readonly string effectKey = "Blink"; // Will also maybe want to add unique sound-effect and animation/particles for this effect, during the "polishing" phase and such. 
+        public static readonly string effectKey = "Blink"; // Will also maybe want to add unique sound-effect and animation/particles for this effect, during the "polishing" phase and such.
 
         public override void SetProperties()
         {
